@@ -1,0 +1,40 @@
+{
+  "label": "API Entry",
+  "category": "General",
+  "type": "webhook",
+  "icon": "Package",
+  "schema": {
+    "label": "API Entry",
+    "category": "General",
+    "parameters": [
+      {
+        "id": "param_1771683650016",
+        "label": "URL",
+        "type": "string",
+        "value": "",
+        "canConnect": false,
+        "values": []
+      },
+      {
+        "id": "param_1771683650475",
+        "label": "Method",
+        "type": "enum",
+        "value": "",
+        "canConnect": false,
+        "values": [
+          "GET",
+          "PUT",
+          "POST",
+          "DELETE"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "out_1771683791195",
+        "label": "Payload",
+        "type": "-"
+      }
+    ]
+  }
+}

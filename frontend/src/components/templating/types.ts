@@ -7,11 +7,23 @@ export interface Parameter {
   values?: string[];
 }
 
+export interface NodeOutput {
+  id: string;
+  label: string;
+  type: string;
+}
+
 export interface NodeSchema {
   label: string;
   category: string;
-  type: string;
-  description: string;
   parameters: Parameter[];
-  outputs: { id: string; label: string; type: string }[];
+  outputs: NodeOutput[];
+}
+
+export interface NodeTemplate {
+  label: string;
+  category: string;
+  type: string;
+  description?: string;
+  schema: NodeSchema;
 }

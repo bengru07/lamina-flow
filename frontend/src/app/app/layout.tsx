@@ -10,6 +10,7 @@ import { Provider } from "react-redux"
 import { store } from "@/redux/store"
 import { useAppSelector } from "@/api/appDispatcher";
 import AppNavbar from "@/components/app-navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -26,6 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <AppNavbar />
             <div className="flex-1">
               {children}
+              <Toaster />
             </div>
           </main>
         </SidebarProvider>

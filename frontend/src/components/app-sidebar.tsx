@@ -136,17 +136,18 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {mainNav.map((item) => (
-                  <Link key={item.title} href={item.path} passHref>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton 
-                        isActive={path === item.path}
-                        className={path === item.path ? "bg-accent text-accent-foreground" : ""}
-                      >
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      asChild
+                      isActive={path === item.path}
+                      className={path === item.path ? "bg-accent text-accent-foreground" : ""}
+                    >
+                      <Link href={item.path}>
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </Link>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                 ))}
 
                 <Collapsible asChild defaultOpen className="group/collapsible">
@@ -164,27 +165,29 @@ export function AppSidebar() {
                           <SidebarMenuSub>
                             {workspaces.map((workspace: any) => (
                               <SidebarMenuSubItem key={workspace.uuid}>
-                                <Link 
-                                  href={`/app/projects/${workspace.uuid}`} 
-                                  onClick={(e) => handleWorkspaceClick(e, `/app/projects/${workspace.uuid}`, workspace.uuid)}
-                                  passHref
+                                <SidebarMenuSubButton 
+                                  asChild 
+                                  isActive={path === `/app/projects/${workspace.uuid}`}
                                 >
-                                  <SidebarMenuSubButton isActive={path === `/app/projects/${workspace.uuid}`}>
+                                  <Link 
+                                    href={`/app/projects/${workspace.uuid}`} 
+                                    onClick={(e) => handleWorkspaceClick(e, `/app/projects/${workspace.uuid}`, workspace.uuid)}
+                                  >
                                     <span>{workspace.name}</span>
-                                  </SidebarMenuSubButton>
-                                </Link>
+                                  </Link>
+                                </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             ))}
                           </SidebarMenuSub>
                         </CollapsibleContent>
                       </>
                     ) : (
-                      <Link href="/app/projects" passHref>
-                        <SidebarMenuButton isActive={path === "/app/projects"}>
+                      <SidebarMenuButton asChild isActive={path === "/app/projects"}>
+                        <Link href="/app/projects">
                           <FolderOpen className="h-4 w-4" />
                           <span>Projects</span>
-                        </SidebarMenuButton>
-                      </Link>
+                        </Link>
+                      </SidebarMenuButton>
                     )}
                   </SidebarMenuItem>
                 </Collapsible>
@@ -224,9 +227,11 @@ export function AppSidebar() {
         <SidebarFooter className="p-4 mt-auto">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className="gap-3">
-                <Settings className="h-4 w-4" />
-                <Link href="/app/settings">Settings</Link>
+              <SidebarMenuButton asChild className="gap-3">
+                <Link href="/app/settings">
+                  <Settings className="h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
@@ -245,7 +250,7 @@ export function AppSidebar() {
             <AlertDialogTitle>Discard Unsaved Changes?</AlertDialogTitle>
             <AlertDialogDescription>
               You have unsaved changes in your current 
-              project <Link className="font-semibold text-slate-100" href={`/app/projects/${activeWorkspaceId}`}>{workspaces.find(w => w.uuid === activeWorkspaceId)?.name}</Link>.
+              project <span className="font-semibold text-slate-100">{workspaces.find(w => w.uuid === activeWorkspaceId)?.name}</span>.
               Switching projects will close all open tabs and discard any unsaved work.
             </AlertDialogDescription>
           </AlertDialogHeader>

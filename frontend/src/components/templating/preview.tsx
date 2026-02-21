@@ -4,35 +4,47 @@ import { GenericNode } from "@/components/builder/generic-node"
 import { NodeSchema } from "@/components/templating/types"
 
 interface NodePreviewProps {
-  schema: NodeSchema;
+  data_schema: NodeSchema;
+  nodeType: string;
 }
 
-export function NodePreview({ schema }: NodePreviewProps) {
+export function NodePreview({ data_schema, nodeType }: NodePreviewProps) {
   const nodeTypes = useMemo(() => ({
-    [schema.type]: GenericNode,
+    [nodeType]: GenericNode,
     custom_node: GenericNode
-  }), [schema.type]);
+  }), [nodeType]);
 
   const nodes = useMemo(() => [{
     id: "preview-node",
-    type: schema.type,
+    type: nodeType || "custom_node",
     position: { x: 0, y: 0 },
     data: {
-      schema: { ...schema },
-      values: schema.parameters.reduce((acc: any, p) => ({ ...acc, [p.id]: p.value }), {}),
+      schema: data_schema,
+      values: data_schema.parameters?.reduce((acc: any, p) => ({ 
+        ...acc, 
+        [p.id]: p.value 
+      }), {}) || {},
       connectedParams: {},
     },
-  }], [schema]);
+  }], [data_schema, nodeType]);
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={[]}
-      nodeTypes={nodeTypes}
-      fitView
-      fitViewOptions={{ padding: 0.8 }}
-    >
-      <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="#cbd5e1" />
-    </ReactFlow>
+    <div className="h-full w-full bg-[#050505]">
+      <ReactFlow
+        nodes={nodes}
+        edges={[]}
+        nodeTypes={nodeTypes}
+        fitView
+        fitViewOptions={{ padding: 0.5 }}
+        nodesDraggable={true}
+        panOnDrag={true}
+      >
+        <Background 
+          variant={BackgroundVariant.Dots} 
+          gap={24} 
+          size={1} 
+        />
+      </ReactFlow>
+    </div>
   )
 }
