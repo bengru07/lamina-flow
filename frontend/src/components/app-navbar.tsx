@@ -17,7 +17,7 @@ export default function AppNavbar() {
   );
   
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between px-4 border-b sticky top-0 bg-background z-20">
+    <header className="flex h-16 shrink-0 items-center justify-between px-4 border-b sticky top-0 bg-background z-50">
       <div className="flex items-center gap-2 space-4">
         <SidebarTrigger />
         <DynamicBreadcrumbs baseRoute="/app" />

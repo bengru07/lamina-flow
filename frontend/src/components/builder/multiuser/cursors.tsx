@@ -44,7 +44,7 @@ export const EditorCursor = ({ containerRef }: { containerRef: React.RefObject<H
 
   return (
     <div
-      className="absolute pointer-events-none cursor-none"
+      className="absolute pointer-events-none"
       style={{
         left: pos.x,
         top: pos.y,

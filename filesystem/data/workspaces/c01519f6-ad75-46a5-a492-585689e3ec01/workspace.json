@@ -1,0 +1,147 @@
+{
+  "uuid": "c01519f6-ad75-46a5-a492-585689e3ec01",
+  "name": "AI Delivery Processing",
+  "description": "Little processor where AI decides where deliveries go",
+  "category": "General",
+  "lastUpdated": "2026-02-21 10:10:48",
+  "thumbnailUrl": "/api/placeholder/400/225",
+  "isDarkThumbnail": true,
+  "shorthand": "c01519f6-ad75-46a5-a492-585689e3ec01",
+  "settings": {},
+  "builder": {
+    "nodes_dir": "/Users/ben/Data/Diplomarbeit/git public/lamina-flow/filesystem/data/workspaces/c01519f6-ad75-46a5-a492-585689e3ec01/nodes",
+    "node_templates": [
+      {
+        "label": "Webhook Listener",
+        "category": "Trigger",
+        "type": "webhook",
+        "icon": "Zap",
+        "schema": {
+          "label": "Webhook Listener",
+          "category": "Trigger",
+          "parameters": [
+            {
+              "id": "path",
+              "label": "Endpoint Path",
+              "type": "string",
+              "value": "/api/webhook",
+              "canConnect": false
+            }
+          ],
+          "outputs": [
+            {
+              "id": "body",
+              "label": "Payload",
+              "type": "JSON"
+            }
+          ]
+        }
+      },
+      {
+        "label": "Condition",
+        "category": "Logic",
+        "type": "conditional",
+        "icon": "Brain",
+        "schema": {
+          "label": "Condition",
+          "category": "Logic",
+          "parameters": [
+            {
+              "id": "logic",
+              "label": "Rule",
+              "type": "string",
+              "value": "",
+              "canConnect": true
+            }
+          ],
+          "outputs": [
+            {
+              "id": "true",
+              "label": "True",
+              "type": "Boolean"
+            },
+            {
+              "id": "false",
+              "label": "False",
+              "type": "Boolean"
+            },
+            {
+              "id": "data",
+              "label": "Data",
+              "type": "Object"
+            }
+          ]
+        }
+      },
+      {
+        "label": "Live Monitor",
+        "category": "Output",
+        "type": "websocket",
+        "icon": "Activity",
+        "schema": {
+          "label": "Live Monitor",
+          "category": "Output",
+          "parameters": [
+            {
+              "id": "port",
+              "label": "WS Port",
+              "type": "number",
+              "value": 8888,
+              "canConnect": false
+            },
+            {
+              "id": "path",
+              "label": "WS Path",
+              "type": "string",
+              "value": "/ws",
+              "canConnect": false
+            }
+          ],
+          "outputs": [
+            {
+              "id": "broadcast",
+              "label": "Last Streamed Data",
+              "type": "Object"
+            }
+          ]
+        }
+      },
+      {
+        "label": "Webhook",
+        "category": "API",
+        "type": "webhook 2",
+        "description": "Description of what this node does.",
+        "parameters": [
+          {
+            "id": "input_1",
+            "label": "URL",
+            "type": "string",
+            "value": "Default",
+            "canConnect": false,
+            "values": []
+          },
+          {
+            "id": "param_igf8n",
+            "label": "Method",
+            "type": "enum",
+            "value": "",
+            "canConnect": false,
+            "values": [
+              "GET",
+              "PUT",
+              "POST",
+              "DELETE"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "output_1",
+            "label": "On Payload (payload: any)",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  }
+}

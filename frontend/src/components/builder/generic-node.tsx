@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '@/api/appDispatcher';
 import { setSelectedNode } from '@/redux/workflow/workflowSlice';
 import { setTabDirty, updateNodeData } from '@/redux/workflow/tabsSlice';
 import { TooltipPortal } from '@radix-ui/react-tooltip';
+import { SelectPortal } from '@radix-ui/react-select';
 
 const NodeHeader = ({ 
   schema, 
@@ -117,14 +118,16 @@ const ParameterRow = ({
                 dispatch(setTabDirty({ path: activeTabPath!, isDirty: true }));
               }}
             >
-              <SelectTrigger className="h-7 text-[10px] bg-background border-border shadow-none dark:text-slate-100">
+              <SelectTrigger className="h-7 text-[12px] bg-background border-border shadow-none dark:text-slate-100">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="z-100">
-                {param.options?.map((opt: string) => (
-                  <SelectItem key={opt} value={opt} className="text-[10px]">{opt}</SelectItem>
-                ))}
-              </SelectContent>
+              <SelectPortal>
+                <SelectContent className="z-1000">
+                  {(param.options || param.values)?.map((opt: string) => (
+                    <SelectItem key={opt} value={opt} className="text-[14px]">{opt}</SelectItem>
+                  ))}
+                </SelectContent>
+              </SelectPortal>
             </Select>
           ) : (
             <Input 
