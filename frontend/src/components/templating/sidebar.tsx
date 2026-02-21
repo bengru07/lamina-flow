@@ -43,7 +43,7 @@ export function SidebarConfig({
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] bg-[#0a0a0a] text-zinc-400">
+    <div className="flex flex-col h-full bg-[#0a0a0a] text-zinc-400">
       <div className="px-6 py-8 space-y-10">
         
         <section className="space-y-4">

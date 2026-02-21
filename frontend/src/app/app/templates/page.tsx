@@ -11,6 +11,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { SidebarConfig } from "@/components/templating/sidebar"
 import { NodePreview } from "@/components/templating/preview"
 import { NodeSchema } from "@/components/templating/types"
+import { CopyButton } from "@/components/ui/button-copy"
 
 const INITIAL_SCHEMA: NodeSchema = {
   label: "New Node Template",
@@ -41,28 +42,51 @@ export default function NodeTemplateBuilder() {
 
   const renderJsonWithSyntaxHighlighting = (obj: any) => {
     const json = JSON.stringify(obj, null, 3);
-    return json.split('\n').map((line, i) => {
-      return (
-        <div key={i} className="whitespace-pre">
-          {line.split(/(".*?")/).map((part, j) => {
-            if (part.startsWith('"') && part.endsWith('"')) {
-              if (line.includes(`${part}:`)) return <span key={j} className="text-pink-400">{part}</span>;
-              return <span key={j} className="text-emerald-300">{part}</span>;
-            }
-            if (/\d+/.test(part) && !line.includes(`"${part}"`)) return <span key={j} className="text-orange-300">{part}</span>;
-            if (/(true|false|null)/.test(part)) return <span key={j} className="text-sky-400 font-bold">{part}</span>;
-            return <span key={j} className="text-zinc-400">{part}</span>;
-          })}
+    return (
+      <div className="font-mono text-[13px] leading-6 bg-[#0a0a0a] rounded-lg border border-zinc-800/50 overflow-hidden">
+        <div className="absolute right-2 top-2 z-10">
+          <CopyButton text={JSON.stringify(obj, null, 3)} />
         </div>
-      );
-    });
+        {json.split('\n').map((line, i) => (
+          <div key={i} className="flex group hover:bg-zinc-900/50 transition-colors">
+            <div className="w-12 shrink-0 text-right pr-4 select-none text-zinc-600 border-r border-zinc-800/30 group-hover:text-zinc-400">
+              {i + 1}
+            </div>
+            
+            <div className="pl-4 whitespace-pre">
+              {line.split(/(".*?")/).map((part, j) => {
+                if (part.startsWith('"') && part.endsWith('"')) {
+                  if (line.includes(`${part}:`)) {
+                    return <span key={j} className="text-pink-400 opacity-90">{part}</span>;
+                  }
+                  return <span key={j} className="text-emerald-400">{part}</span>;
+                }
+                
+                // Numbers
+                if (/\d+/.test(part) && !line.includes(`"${part}"`)) {
+                  return <span key={j} className="text-orange-300">{part}</span>;
+                }
+                
+                // Booleans and Null
+                if (/(true|false|null)/.test(part)) {
+                  return <span key={j} className="text-sky-400 font-semibold">{part}</span>;
+                }
+                
+                // Punctuation and whitespace
+                return <span key={j} className="text-zinc-500">{part}</span>;
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   return (
     <div className="flex h-full w-full bg-background overflow-hidden">
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={25} minSize={20} maxSize={40} className="border-r bg-muted/5">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="h-[calc(100vh-4rem)] overflow-y-auto flex flex-col">
             <div className="px-3 pt-3">
               <TabsList className="grid w-full grid-cols-2 h-8">
                 <TabsTrigger value="builder" className="gap-2 text-xs"><Layers className="w-3 h-3" /> Template</TabsTrigger>
