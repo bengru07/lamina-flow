@@ -1,0 +1,39 @@
+# --- General / OS ---
+.DS_Store
+Thumbs.db
+.env
+*.log
+.vscode/
+.idea/
+
+# --- Next.js / Frontend ---
+**/node_modules/
+**/dist/
+**/.next/
+**/out/
+**/build/
+.next/
+next-env.d.ts
+.expo/
+
+# --- Python Backends ---
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/.pytest_cache/
+**/.venv/
+**/venv/
+**/env/
+**/virtualenv/
+**/.python-version
+
+# --- AI / Data specific ---
+**/models/*.bin
+**/models/*.onnx
+**/.ipynb_checkpoints/
+**/data/*.csv
+**/data/*.json
+!**/data/sample.json  # Keep sample data if needed
+
+# --- Docker ---
+**/.dockerignore
