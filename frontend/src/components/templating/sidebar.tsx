@@ -150,11 +150,11 @@ export function SidebarConfig({
                         <Badge 
                           key={v} 
                           className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border-none rounded px-2 py-0.5 text-[10px] flex items-center gap-1.5"
+                          onClick={() => updateParameter(param.id, { values: param.values?.filter(x => x !== v) })}
                         >
                           {v}
                           <X 
                             className="w-2.5 h-2.5 cursor-pointer text-zinc-500" 
-                            onClick={() => updateParameter(param.id, { values: param.values?.filter(x => x !== v) })}
                           />
                         </Badge>
                       ))}
