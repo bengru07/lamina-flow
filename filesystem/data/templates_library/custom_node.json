@@ -1,0 +1,27 @@
+{
+  "label": "New Node Template",
+  "category": "Test",
+  "type": "custom_node",
+  "description": "Description of what this node does.",
+  "schema": {
+    "label": "New Node Template",
+    "category": "Test",
+    "parameters": [
+      {
+        "id": "724cc49d-4fb7-41e9-8b6a-9bd33c223fa2",
+        "label": "Example Input",
+        "type": "string",
+        "value": "Default",
+        "canConnect": true,
+        "values": []
+      }
+    ],
+    "outputs": [
+      {
+        "id": "364e8f64-8428-4876-93d1-deae6d855af2",
+        "label": "Result",
+        "type": "string"
+      }
+    ]
+  }
+}

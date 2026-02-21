@@ -32,13 +32,13 @@ export function DynamicBreadcrumbs({
   
   const segments = pathname.split("/").filter(Boolean)
   const baseSegments = baseRoute.split("/").filter(Boolean)
-  
   const relativeSegments = segments.slice(baseSegments.length)
+
+  const isDesignerRoute = relativeSegments.includes("designer")
 
   const breadcrumbs = relativeSegments
     .map((segment, index) => {
       const href = `/${[...baseSegments, ...relativeSegments.slice(0, index + 1)].join("/")}`
-      
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(segment)
       let label = segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ")
 
@@ -64,8 +64,18 @@ export function DynamicBreadcrumbs({
       
       if (hideSegments.some(s => s.toLowerCase() === crumb.segment.toLowerCase())) return false
 
+      const designerIndex = relativeSegments.indexOf("designer")
+      if (isDesignerRoute && index > designerIndex) {
+        return false
+      }
+
       return true
     })
+
+  const visibleBreadcrumbs = breadcrumbs.map((crumb, idx) => ({
+    ...crumb,
+    isLast: idx === breadcrumbs.length - 1
+  }))
 
   return (
     <Breadcrumb>
@@ -76,9 +86,9 @@ export function DynamicBreadcrumbs({
           </BreadcrumbLink>
         </BreadcrumbItem>
 
-        {breadcrumbs.length > 0 && <BreadcrumbSeparator />}
+        {visibleBreadcrumbs.length > 0 && <BreadcrumbSeparator />}
 
-        {breadcrumbs.map((crumb, index) => (
+        {visibleBreadcrumbs.map((crumb, index) => (
           <React.Fragment key={crumb.href}>
             <BreadcrumbItem>
               {crumb.isLast ? (
@@ -89,7 +99,7 @@ export function DynamicBreadcrumbs({
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>
-            {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+            {index < visibleBreadcrumbs.length - 1 && <BreadcrumbSeparator />}
           </React.Fragment>
         ))}
       </BreadcrumbList>

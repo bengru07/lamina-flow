@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { ReactFlow, Background, BackgroundVariant } from "@xyflow/react"
 import { GenericNode } from "@/components/builder/generic-node"
 import { NodeSchema } from "@/components/templating/types"
@@ -28,9 +28,26 @@ export function NodePreview({ data_schema, nodeType }: NodePreviewProps) {
     },
   }], [data_schema, nodeType]);
 
+  const [colorMode, setColorMode] = useState<'light' | 'dark'>('light')
+  
+  useEffect(() => {
+    const sync = () =>
+      setColorMode(
+        document.documentElement.classList.contains("dark") ? "dark" : "light"
+      )
+    sync()
+    const obs = new MutationObserver(sync)
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"]
+    })
+    return () => obs.disconnect()
+  }, [])
+
   return (
-    <div className="h-full w-full bg-[#050505]">
+    <div className="h-full w-full bg-background">
       <ReactFlow
+        colorMode={colorMode}
         nodes={nodes}
         edges={[]}
         nodeTypes={nodeTypes}
@@ -38,6 +55,7 @@ export function NodePreview({ data_schema, nodeType }: NodePreviewProps) {
         fitViewOptions={{ padding: 0.5 }}
         nodesDraggable={true}
         panOnDrag={true}
+        className="bg-muted/30 dark:bg-black/70"
       >
         <Background 
           variant={BackgroundVariant.Dots} 

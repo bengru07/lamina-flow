@@ -14,6 +14,8 @@ import { fetchWorkspaces } from "@/redux/workspaces/WorkspaceThunk"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
+import { NodePreview } from "@/components/templating/preview"
+import { ReactFlowProvider } from "@xyflow/react"
 
 export default function NodeTemplatesPage() {
   const dispatch = useAppDispatch()
@@ -48,7 +50,7 @@ export default function NodeTemplatesPage() {
     try {
       await dispatch(addTemplateToWorkspace({
         workspaceId: selectedWorkspaceId,
-        templateName: targetTemplate.type.toLowerCase().replace(/\s+/g, '-')
+        templateName: targetTemplate.type
       })).unwrap()
       toast.success(`Added ${targetTemplate.type} to project`)
       setTargetTemplate(null)
@@ -60,13 +62,13 @@ export default function NodeTemplatesPage() {
   }
 
   return (
-    <div className="flex-1 p-8 pt-4 max-w-7xl mx-auto w-full space-y-8">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between border-b pb-8">
+    <div className="flex-1 p-8 pt-4 max-w-7xl mx-auto w-full space-y-8 bg-background text-foreground">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between border-b pb-8 border-border">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-1">Node Library</h1>
+          <h1 className="text-3xl font-bold tracking-tight mb-1 text-foreground">Node Library</h1>
           <p className="text-muted-foreground text-sm">Manage and deploy workflow nodes.</p>
         </div>
-        <Button size="sm" className="h-9 gap-2" onClick={() => router.push('/app/templates/designer')}>
+        <Button size="sm" className="h-9 gap-2 bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => router.push('/app/templates/designer')}>
           <Plus className="h-4 w-4" /> New Designer Template
         </Button>
       </div>
@@ -74,75 +76,69 @@ export default function NodeTemplatesPage() {
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search..." className="pl-10 h-10" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+          <Input 
+            placeholder="Search..." 
+            className="pl-10 h-10 bg-muted/50 border-border focus-visible:ring-ring" 
+            value={searchQuery} 
+            onChange={e => setSearchQuery(e.target.value)} 
+          />
         </div>
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-full sm:w-[180px] h-10">
+          <SelectTrigger className="w-full sm:w-[180px] h-10 bg-muted/50 border-border text-foreground">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-popover border-border text-popover-foreground">
             {categories.map(cat => <SelectItem key={cat} value={cat} className="capitalize">{cat}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
 
       {requests.fetchLibrary === "pending" ? (
-        <div className="flex justify-center py-32"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+        <div className="flex justify-center py-32"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
       ) : filteredTemplates.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTemplates.map((template) => (
-            <Card key={template.type} className="group overflow-hidden flex flex-col bg-[#0f0f0f] border-zinc-800 hover:border-zinc-600 transition-all">
-              <div className="h-40 bg-[#050505] relative flex items-center justify-center border-b border-zinc-800/50">
-                <div className="w-48 bg-[#1a1a1a] border border-zinc-700 rounded-md p-3 space-y-3 scale-90 shadow-2xl">
-                  <div className="flex items-center gap-2 border-b border-zinc-800 pb-2">
-                    <div className="w-2 h-2 rounded-full bg-blue-500" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 truncate">{template.label}</span>
-                  </div>
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                      {template.parameters?.slice(0, 3).map((p: any) => (
-                        <div key={p.id} className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full border border-zinc-500" /><div className="w-8 h-1 bg-zinc-800 rounded-full" /></div>
-                      ))}
-                    </div>
-                    <div className="space-y-1 items-end flex flex-col">
-                      {template.outputs?.slice(0, 3).map((o: any) => (
-                        <div key={o.id} className="flex items-center gap-1.5"><div className="w-8 h-1 bg-zinc-800 rounded-full" /><div className="w-1.5 h-1.5 rounded-full bg-zinc-400" /></div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+            <Card key={template.type} className="group overflow-hidden flex flex-col bg-card border-border hover:border-muted-foreground/50 transition-all shadow-none">
+              <div className="h-48 bg-muted/30 relative border-b border-border/50 overflow-hidden pointer-events-none">
+                <ReactFlowProvider>
+                  <NodePreview 
+                    data_schema={template.schema} 
+                    nodeType={template.type} 
+                  />
+                </ReactFlowProvider>
+                <div className="absolute inset-0 bg-transparent z-10" />
               </div>
 
               <div className="p-4 flex-1 flex flex-col">
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <h3 className="font-semibold text-sm text-zinc-100">{template.label}</h3>
-                    <p className="text-[11px] text-zinc-500 font-mono">{template.type}</p>
+                    <h3 className="font-semibold text-sm text-card-foreground">{template.label}</h3>
+                    <p className="text-[11px] text-muted-foreground font-mono">{template.type}</p>
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-zinc-100">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-[#111] border-zinc-800 text-zinc-300">
+                    <DropdownMenuContent align="end" className="bg-popover border-border text-popover-foreground">
                       <DropdownMenuItem onClick={() => router.push(`/app/templates/designer/${template.type}`)} className="gap-2">
                         <Edit2 className="h-4 w-4" /> Edit Designer
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setTargetTemplate(template)} className="gap-2">
                         <Send className="h-4 w-4" /> Push to Project
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-zinc-800" />
-                      <DropdownMenuItem className="text-red-400 gap-2 focus:text-red-400 focus:bg-red-400/10" onClick={() => dispatch(deleteLibraryTemplate(template.label))}>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-destructive gap-2 focus:text-destructive focus:bg-destructive/10" onClick={() => dispatch(deleteLibraryTemplate(template.label))}>
                         <Trash2 className="h-4 w-4" /> Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <p className="text-xs text-zinc-400 line-clamp-2 mb-4 italic">{template.description || "No description."}</p>
+                <p className="text-xs text-muted-foreground line-clamp-2 mb-4 italic">{template.description || "No description provided for this template."}</p>
                 <div className="mt-auto pt-4 flex items-center justify-between">
-                  <Badge variant="outline" className="text-[9px] border-zinc-800 text-zinc-500 uppercase">{template.category}</Badge>
-                  <Button variant="link" size="sm" className="h-auto p-0 text-zinc-400 hover:text-primary text-[11px] gap-1" onClick={() => setTargetTemplate(template)}>
+                  <Badge variant="outline" className="text-[9px] border-border text-muted-foreground uppercase">{template.category}</Badge>
+                  <Button variant="link" size="sm" className="h-auto p-0 text-muted-foreground hover:text-foreground text-[11px] gap-1" onClick={() => setTargetTemplate(template)}>
                     Deploy <ArrowRight className="h-3 w-3" />
                   </Button>
                 </div>
@@ -151,29 +147,33 @@ export default function NodeTemplatesPage() {
           ))}
         </div>
       ) : (
-        <div className="py-20 flex flex-col items-center border border-dashed border-zinc-800 rounded-xl">
-          <Package className="h-10 w-10 text-zinc-800 mb-4" />
-          <p className="text-sm text-zinc-500">Your node library is empty.</p>
+        <div className="py-20 flex flex-col items-center border border-dashed border-border rounded-xl bg-muted/10">
+          <Package className="h-10 w-10 text-muted-foreground/30 mb-4" />
+          <p className="text-sm text-muted-foreground font-mono">No nodes found in library.</p>
         </div>
       )}
 
       <Dialog open={!!targetTemplate} onOpenChange={() => setTargetTemplate(null)}>
-        <DialogContent className="bg-[#0f0f0f] border-zinc-800 text-zinc-100">
+        <DialogContent className="bg-popover border-border text-popover-foreground">
           <DialogHeader>
             <DialogTitle>Deploy Template</DialogTitle>
-            <DialogDescription className="text-zinc-400">Select a project to inject the <span className="text-zinc-100 font-bold">{targetTemplate?.label}</span> node.</DialogDescription>
+            <DialogDescription className="text-muted-foreground">
+              Select a project to inject the <span className="text-foreground font-bold">{targetTemplate?.label}</span> node.
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <Select onValueChange={setSelectedWorkspaceId} value={selectedWorkspaceId}>
-              <SelectTrigger className="bg-zinc-900 border-zinc-800"><SelectValue placeholder="Select a project" /></SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-800 text-zinc-300">
+              <SelectTrigger className="bg-muted/50 border-border text-foreground">
+                <SelectValue placeholder="Select a project" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border">
                 {workspaces.map((ws) => <SelectItem key={ws.uuid} value={ws.uuid}>{ws.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setTargetTemplate(null)} className="text-zinc-400">Cancel</Button>
-            <Button disabled={!selectedWorkspaceId || isPushing} onClick={handlePushToProject}>
+            <Button variant="ghost" onClick={() => setTargetTemplate(null)} className="text-muted-foreground hover:bg-muted hover:text-foreground">Cancel</Button>
+            <Button disabled={!selectedWorkspaceId || isPushing} onClick={handlePushToProject} className="bg-primary text-primary-foreground hover:bg-primary/90">
               {isPushing && <Loader2 className="h-4 w-4 animate-spin mr-2" />} Deploy Node
             </Button>
           </DialogFooter>

@@ -36,5 +36,6 @@
         "type": "-"
       }
     ]
-  }
+  },
+  "description": "RESTful workflow entry point that supports all methods."
 }
