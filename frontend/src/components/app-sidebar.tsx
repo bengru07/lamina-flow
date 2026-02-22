@@ -89,7 +89,7 @@ export function AppSidebar() {
       setPendingUrl(targetPath);
       setShowExitDialog(true);
     }
-    else {
+    else if (isSwitchingProject) {
       dispatch(closeAllTabs());
     }
   };

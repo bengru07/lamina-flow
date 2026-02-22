@@ -3,7 +3,7 @@
   "name": "AI Delivery Processing",
   "description": "Little processor where AI decides where deliveries go",
   "category": "General",
-  "lastUpdated": "2026-02-21 15:28:55",
+  "lastUpdated": "2026-02-22 11:52:54",
   "thumbnailUrl": "/api/placeholder/400/225",
   "isDarkThumbnail": true,
   "shorthand": "c01519f6-ad75-46a5-a492-585689e3ec01",
@@ -47,6 +47,33 @@
               "id": "out_1771683791195",
               "label": "Payload",
               "type": "-"
+            }
+          ]
+        }
+      },
+      {
+        "label": "New Node Template",
+        "category": "Test",
+        "type": "custom_node",
+        "description": "Description of what this node does. 2 cool for you",
+        "schema": {
+          "label": "New Node Template",
+          "category": "Test",
+          "parameters": [
+            {
+              "id": "724cc49d-4fb7-41e9-8b6a-9bd33c223fa2",
+              "label": "Example Input",
+              "type": "string",
+              "value": "Default",
+              "canConnect": true,
+              "values": []
+            }
+          ],
+          "outputs": [
+            {
+              "id": "364e8f64-8428-4876-93d1-deae6d855af2",
+              "label": "Result",
+              "type": "string"
             }
           ]
         }

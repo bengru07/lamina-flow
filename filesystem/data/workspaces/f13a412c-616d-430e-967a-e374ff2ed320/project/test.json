@@ -1,0 +1,44 @@
+{
+  "nodes": [
+    {
+      "id": "custom_node_1771757969743",
+      "type": "custom_node",
+      "position": {
+        "x": 198.5,
+        "y": 265
+      },
+      "data": {
+        "schema": {
+          "label": "New Node Template",
+          "category": "Test",
+          "parameters": [
+            {
+              "id": "724cc49d-4fb7-41e9-8b6a-9bd33c223fa2",
+              "label": "Example Input",
+              "type": "string",
+              "value": "Default",
+              "canConnect": true,
+              "values": []
+            }
+          ],
+          "outputs": [
+            {
+              "id": "364e8f64-8428-4876-93d1-deae6d855af2",
+              "label": "Result",
+              "type": "string"
+            }
+          ]
+        },
+        "values": {},
+        "connectedParams": {}
+      },
+      "measured": {
+        "width": 280,
+        "height": 162
+      },
+      "selected": true,
+      "dragging": true
+    }
+  ],
+  "edges": []
+}

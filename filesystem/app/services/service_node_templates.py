@@ -40,23 +40,25 @@ def add_template_to_workspace(workspace_id: str, template_name: str):
     workspace_meta = workspace_service.get_workspace(workspace_id)
 
     if "builder" not in workspace_meta:
-        workspace_meta["builder"] = {"node_templates": []}
+        workspace_meta["builder"] = {}
 
-    existing_templates = workspace_meta["builder"].get("node_templates", [])
+    if "node_templates" not in workspace_meta["builder"]:
+        workspace_meta["builder"]["node_templates"] = []
 
-    exists = False
-    for i, t in enumerate(existing_templates):
-        if t.get("label") == template_data.get("label") or t.get("type") == template_data.get("type"):
-            existing_templates[i] = template_data
-            exists = True
-            break
+    templates = workspace_meta["builder"]["node_templates"]
 
-    if not exists:
-        existing_templates.append(template_data)
+    target_label = template_data.get("label")
+    target_type = template_data.get("type")
 
-    workspace_meta["builder"]["node_templates"] = existing_templates
+    updated_templates = [
+        t for t in templates
+        if t.get("label") != target_label and t.get("type") != target_type
+    ]
+
+    updated_templates.append(template_data)
+
+    workspace_meta["builder"]["node_templates"] = updated_templates
     return workspace_service.update_workspace(workspace_id, workspace_meta)
-
 
 def delete_template_from_library(name: str):
     file_path = os.path.join(TEMPLATES_LIB_DIR, f"{name}.json")

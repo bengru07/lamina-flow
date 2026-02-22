@@ -62,14 +62,14 @@ export default function NodeTemplatesPage() {
   }
 
   return (
-    <div className="flex-1 p-8 pt-4 max-w-7xl mx-auto w-full space-y-8 bg-background text-foreground">
+    <div className="flex-1 px-14 pt-7 max-w-7xl mx-auto w-full space-y-8 bg-background text-foreground">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between border-b pb-8 border-border">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-1 text-foreground">Node Library</h1>
+          <h1 className="text-4xl font-bold tracking-tight mb-1 text-foreground">Node Library</h1>
           <p className="text-muted-foreground text-sm">Manage and deploy workflow nodes.</p>
         </div>
         <Button size="sm" className="h-9 gap-2 bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => router.push('/app/templates/designer')}>
-          <Plus className="h-4 w-4" /> New Designer Template
+          <Plus className="h-4 w-4" /> New Node Template
         </Button>
       </div>
 
@@ -98,15 +98,15 @@ export default function NodeTemplatesPage() {
       ) : filteredTemplates.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTemplates.map((template) => (
-            <Card key={template.type} className="group overflow-hidden flex flex-col bg-card border-border hover:border-muted-foreground/50 transition-all shadow-none">
-              <div className="h-48 bg-muted/30 relative border-b border-border/50 overflow-hidden pointer-events-none">
+            <Card onClick={() => router.push(`/app/templates/designer/${template.type}`)} key={template.type} className="group overflow-hidden flex flex-col bg-card border-border hover:border-muted-foreground/50 transition-all shadow-none">
+              <div className="h-48 bg-muted/30 relative border-b border-border/50 overflow-hidden">
                 <ReactFlowProvider>
                   <NodePreview 
                     data_schema={template.schema} 
                     nodeType={template.type} 
                   />
                 </ReactFlowProvider>
-                <div className="absolute inset-0 bg-transparent z-10" />
+                <div className="absolute inset-0 z-50 bg-transparent cursor-default" />
               </div>
 
               <div className="p-4 flex-1 flex flex-col">
@@ -122,10 +122,16 @@ export default function NodeTemplatesPage() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-popover border-border text-popover-foreground">
-                      <DropdownMenuItem onClick={() => router.push(`/app/templates/designer/${template.type}`)} className="gap-2">
+                      <DropdownMenuItem onClick={(e: any) => {
+                        e.stopPropagation();
+                        router.push(`/app/templates/designer/${template.type}`);
+                      }} className="gap-2">
                         <Edit2 className="h-4 w-4" /> Edit Designer
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTargetTemplate(template)} className="gap-2">
+                      <DropdownMenuItem onClick={(e: any) => {
+                        e.stopPropagation();
+                        setTargetTemplate(template);
+                      }} className="gap-2">
                         <Send className="h-4 w-4" /> Push to Project
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />

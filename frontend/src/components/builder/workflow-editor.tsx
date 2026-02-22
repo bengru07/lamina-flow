@@ -282,9 +282,9 @@ function WorkflowContent() {
           fitView
           minZoom={0.1}
           maxZoom={2}
-          className="bg-muted/30 dark:bg-black/70"
+          className="bg-muted/30 dark:bg-black/70 cursor-pointer"
         >
-          <EditorCursor containerRef={editorRef} />
+          {/* <EditorCursor containerRef={editorRef} /> */}
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
           <Controls className="dark:bg-slate-900" />
           <MiniMap className="dark:bg-slate-900" />

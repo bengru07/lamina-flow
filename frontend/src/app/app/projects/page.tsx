@@ -27,11 +27,13 @@ import { ProjectCreateDialog } from "@/components/app/create-project-dialog"
 import { ProjectDeleteDialog } from "@/components/app/delete-project-dialog"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { closeAllTabs } from "@/redux/workflow/tabsSlice"
 
 export default function Page() {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const workspaces = useAppSelector((state: RootState) => state.workspaces.list)
+  const activeWorkspaceId = useAppSelector((state) => state.workspaces.active?.uuid);
   const status = useAppSelector((state: RootState) => state.workspaces.requests.fetchWorkspaces)
   
   const [searchQuery, setSearchQuery] = useState("")
@@ -76,6 +78,10 @@ export default function Page() {
   }
 
   const handleOpenProject = (uuid: string) => {
+    const isSwitchingProject = activeWorkspaceId !== null && activeWorkspaceId !== uuid;
+    if (isSwitchingProject) {
+      dispatch(closeAllTabs());
+    }
     dispatch(fetchWorkspace(uuid)).then(() => {
       router.push(`/app/projects/${uuid}`);
     })

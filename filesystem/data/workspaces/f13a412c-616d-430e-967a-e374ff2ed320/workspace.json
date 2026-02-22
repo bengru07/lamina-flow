@@ -1,0 +1,43 @@
+{
+  "uuid": "f13a412c-616d-430e-967a-e374ff2ed320",
+  "name": "Test",
+  "description": "test",
+  "category": "General",
+  "lastUpdated": "2026-02-22 11:59:33",
+  "thumbnailUrl": "/api/placeholder/400/225",
+  "isDarkThumbnail": true,
+  "shorthand": "f13a412c-616d-430e-967a-e374ff2ed320",
+  "settings": {},
+  "builder": {
+    "nodes_dir": "/Users/ben/Data/Diplomarbeit/git public/lamina-flow/filesystem/data/workspaces/f13a412c-616d-430e-967a-e374ff2ed320/nodes",
+    "node_templates": [
+      {
+        "label": "New Node Template",
+        "category": "Test",
+        "type": "custom_node",
+        "description": "Description of what this node does. 2 cool for you",
+        "schema": {
+          "label": "New Node Template",
+          "category": "Test",
+          "parameters": [
+            {
+              "id": "724cc49d-4fb7-41e9-8b6a-9bd33c223fa2",
+              "label": "Example Input",
+              "type": "string",
+              "value": "Default",
+              "canConnect": true,
+              "values": []
+            }
+          ],
+          "outputs": [
+            {
+              "id": "364e8f64-8428-4876-93d1-deae6d855af2",
+              "label": "Result",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
