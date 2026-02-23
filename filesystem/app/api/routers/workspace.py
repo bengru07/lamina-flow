@@ -33,7 +33,7 @@ def get_workspace(workspace_id: str):
 @router.put("/{workspace_id}")
 def update_workspace(workspace_id: str, payload: WorkspaceUpdateRequest):
     try:
-        return workspace_service.update_workspace(workspace_id, payload.dict())
+        return workspace_service.update_workspace(workspace_id, payload.model_dump())
     except FileNotFoundError:
         raise HTTPException(404)
 

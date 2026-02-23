@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routers import workspace, multiuser, node_templates
+from app.api.routers import workspace, multiuser, node_templates, settings, ai
 
 app = FastAPI()
 origins = [
@@ -18,5 +18,7 @@ app.add_middleware(
 
 app.include_router(workspace.router)
 app.include_router(node_templates.router)
+app.include_router(settings.router)
+app.include_router(ai.router)
 app.include_router(multiuser.router)
 # uvicorn main:app --host 0.0.0.0 --port 8000
