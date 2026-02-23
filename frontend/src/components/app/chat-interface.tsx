@@ -70,7 +70,7 @@ export function ChatInterface({
   return (
     <Card className={cn(
       "flex flex-col border shadow-2xl bg-background transition-all duration-300",
-      isOverlay ? "fixed bottom-6 right-6 w-[440px] h-[600px] z-50 ring-1 ring-border" : "w-full h-full border-none shadow-none"
+      isOverlay ? "fixed bottom-6 right-6 w-110 h-150 z-50 ring-1 ring-border" : "w-full h-full border-none shadow-none"
     )}>
       <div className="flex-none -mt-6 p-4 border-b flex items-center justify-between bg-muted/30 z-10">
         <div className="flex items-center gap-3">
@@ -94,7 +94,6 @@ export function ChatInterface({
         </div>
       </div>
 
-      {/* Scrollable Message Area */}
       <ScrollArea className="flex-1 overflow-y-auto" ref={scrollRef}>
         <div className="p-4 space-y-6">
           {messages.length === 0 && (
@@ -165,7 +164,6 @@ export function ChatInterface({
         </div>
       </ScrollArea>
 
-      {/* Fixed Input Footer */}
       <div className="flex-none p-4 bg-background border-t">
         <div className="relative flex items-center">
           <textarea
