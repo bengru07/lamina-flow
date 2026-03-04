@@ -1,0 +1,112 @@
+version: '3.8'
+
+# ----------------------------------------------------------------------
+# NETWORKS & VOLUMES
+# ----------------------------------------------------------------------
+networks:
+  lamina_net:
+    driver: bridge
+
+volumes:
+  redis_data:
+  storage_data:
+
+services:
+  # ====================================================================
+  # INFRASTRUCTURE
+  # ====================================================================
+  nats:
+    image: nats:latest
+    container_name: lamina_nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    volumes:
+      - ./infrastructure/nats/nats-server.conf:/nats.conf:ro
+    command: ["-c", "/nats.conf"]
+    networks:
+      - lamina_net
+
+  redis:
+    image: redis:alpine
+    container_name: lamina_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./infrastructure/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis_data:/data
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    networks:
+      - lamina_net
+
+  # ====================================================================
+  # CORE SERVICES
+  # ====================================================================
+  orchestrator:
+    build:
+      context: ./services/orchestrator
+    container_name: lamina_orchestrator
+    env_file:
+      - .env
+    depends_on:
+      - nats
+      - redis
+    networks:
+      - lamina_net
+    restart: unless-stopped
+
+  storage-provider:
+    build:
+      context: ./services/storage-provider
+    container_name: lamina_storage_provider
+    env_file:
+      - .env
+    volumes:
+      - storage_data:/app/data
+    depends_on:
+      - redis
+    networks:
+      - lamina_net
+    restart: unless-stopped
+
+  nats-bridge:
+    build:
+      context: ./services/nats-bridge
+    container_name: lamina_nats_bridge
+    env_file:
+      - .env
+    depends_on:
+      - nats
+    networks:
+      - lamina_net
+    restart: unless-stopped
+
+  # ====================================================================
+  # APPS (API & UI)
+  # ====================================================================
+  gateway:
+    build:
+      context: ./apps/gateway
+    container_name: lamina_gateway
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    depends_on:
+      - orchestrator
+      - nats
+    networks:
+      - lamina_net
+
+  frontend:
+    build:
+      context: ./apps/frontend
+    container_name: lamina_frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - gateway
+    networks:
+      - lamina_net

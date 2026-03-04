@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package lamina.protocol.v1;
+
+option go_package = "lamina-flow/packages/protocol/gen/go/lamina/protocol/v1;protocolv1";
+
+message NodeExecutionEvent {
+  string execution_id = 1;
+  string node_id = 2;
+  string status = 3;
+}
