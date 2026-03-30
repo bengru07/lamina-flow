@@ -1,0 +1,22 @@
+[package]
+name = "lamina"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "lamina"
+path = "src/main.rs"
+
+[dependencies]
+lamina-core = { path = "../core" }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+reqwest = { version = "0.12", features = ["json", "stream"] }
+dotenvy = { workspace = true }
+uuid = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+futures-util = { workspace = true }
+bytes = { workspace = true }

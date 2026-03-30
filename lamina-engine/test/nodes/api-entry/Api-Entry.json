@@ -1,0 +1,36 @@
+{
+  "id": "Api-Entry",
+  "version": "1.0.1",
+  "runtime": "ephemeral",
+  "executor": "python",
+  "protocol": "json_rpc",
+  "entry": "api-entry/node.py",
+  "inputs": [
+    {
+      "id": "url",
+      "label": "URL",
+      "type": "string",
+      "can_connect": false,
+      "default": "/api/v1"
+    },
+    {
+      "id": "method",
+      "label": "METHOD",
+      "type": "enum",
+      "can_connect": false,
+      "options": [
+        "GET",
+        "PUT",
+        "POST",
+        "DELETE"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "id": "payload",
+      "label": "Payload"
+    }
+  ],
+  "updatedAt": "2026-03-26T20:02:15.560Z"
+}

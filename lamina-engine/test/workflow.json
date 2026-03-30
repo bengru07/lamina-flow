@@ -1,0 +1,60 @@
+{
+  "workflow": {
+    "id": "test-workflow",
+    "version": "1.0.0",
+    "name": "Echo Uppercase Test",
+    "nodes": [
+      {
+        "id": "echo-1",
+        "manifest": {
+          "id": "echo",
+          "version": "1.0.0",
+          "runtime": "persistent",
+          "executor": "python",
+          "protocol": "json_rpc",
+          "entry": "echo/node.py",
+          "init": null,
+          "inputs": ["message"],
+          "outputs": ["result"],
+          "eager_init": false,
+          "config": {}
+        },
+        "config_override": {}
+      },
+      {
+        "id": "uppercase-1",
+        "manifest": {
+          "id": "uppercase",
+          "version": "1.0.0",
+          "runtime": "persistent",
+          "executor": "python",
+          "protocol": "json_rpc",
+          "entry": "uppercase/node.py",
+          "init": null,
+          "inputs": ["text"],
+          "outputs": ["uppercased"],
+          "eager_init": false,
+          "config": {}
+        },
+        "config_override": {}
+      }
+    ],
+    "edges": [
+      {
+        "from": { "node_id": "echo-1", "port": "result" },
+        "to": { "node_id": "uppercase-1", "port": "text" },
+        "kind": "data",
+        "feedback": false
+      },
+      {
+        "from": { "node_id": "echo-1", "port": "result" },
+        "to": { "node_id": "uppercase-1", "port": "__trigger__" },
+        "kind": "trigger",
+        "feedback": false
+      }
+    ]
+  },
+  "inputs": {
+    "message": "hello from lamina"
+  }
+}

@@ -1,0 +1,48 @@
+services:
+  nats:
+    image: nats:2.10-alpine
+    command: ["-js", "-m", "8222"]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8222/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  orchestrator:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.orchestrator
+    environment:
+      - RUST_LOG=${RUST_LOG:-info}
+      - NATS_URL=nats://nats:4222
+      - REST_ADDR=0.0.0.0:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      nats:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+    environment:
+      - RUST_LOG=${RUST_LOG:-info}
+      - NATS_URL=nats://nats:4222
+      - LOG_ADAPTER=${LOG_ADAPTER:-}
+      - LOG_URL=${LOG_URL:-}
+    depends_on:
+      nats:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      replicas: ${WORKER_REPLICAS:-1}

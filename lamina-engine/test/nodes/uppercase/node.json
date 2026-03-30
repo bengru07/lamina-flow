@@ -1,0 +1,12 @@
+{
+  "id": "uppercase",
+  "version": "1.0.0",
+  "runtime": "persistent",
+  "executor": "python",
+  "protocol": "json_rpc",
+  "entry": "uppercase/node.py",
+  "inputs": ["text"],
+  "outputs": ["uppercased"],
+  "eager_init": false,
+  "config": {}
+}
