@@ -1,0 +1,3 @@
+[submodule "lamina-vfs"]
+	path = lamina-vfs
+	url = https://github.com/bengru07/lamina-vfs.git
