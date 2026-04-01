@@ -4,6 +4,8 @@ import type { Workspace } from '@/types/workspace'
 import WorkspaceCards from './workspace-cards'
 import WorkspaceListHeader, { type ViewVariant } from './workspace-list-header'
 import WorkspaceTable from './workspace-table'
+import { Spinner } from '@/components/ui/spinner'
+import StatusBanner from '@/components/common/StatusBanner'
 
 const VALID_VIEWS: ViewVariant[] = ['card', 'table']
 const VIEW_PARAM = 'view'
@@ -12,9 +14,11 @@ const TAGS_PARAM = 'tags'
 interface WorkspaceListProps {
   workspaces: Workspace[]
   onNewWorkspace?: () => void
+  loading?: boolean
+  error?: string
 }
 
-export default function WorkspaceList({ workspaces, onNewWorkspace }: WorkspaceListProps) {
+export default function WorkspaceList({ workspaces, onNewWorkspace, loading, error }: WorkspaceListProps) {
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchQuery, setSearchQuery] = React.useState('')
 
@@ -79,10 +83,19 @@ export default function WorkspaceList({ workspaces, onNewWorkspace }: WorkspaceL
         activeTags={activeTags}
         onAction={onNewWorkspace}
       />
-      {view === 'card'
+      {loading ? (
+        <div className="w-full py-20 flex items-center justify-center">
+          <Spinner />
+        </div>
+      ) : null}
+      {!loading && (view === 'card'
         ? <WorkspaceCards workspaces={filtered} />
-        : <WorkspaceTable workspaces={filtered} />
+        : <WorkspaceTable workspaces={filtered} />)
       }
+
+      {error ? (
+        <StatusBanner type="error" message={error} />
+      ) : null}
     </div>
   )
 }

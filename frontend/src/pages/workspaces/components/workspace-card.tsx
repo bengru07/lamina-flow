@@ -30,7 +30,7 @@ export function WorkspaceCard({ workspace, onClick, actions, className }: Worksp
     <Card
       onClick={() => onClick?.(workspace)}
       className={cn(
-        'ring-0 rounded-sm border px-2 py-6 max-w-96 min-w-64 w-full space-y-5 transition duration-150',
+        'ring-0 rounded-sm border px-2 py-6 max-w-96 min-w-36 flex-1 w-full space-y-5 transition duration-150',
         onClick && 'cursor-pointer hover:bg-muted/60',
         className,
       )}
@@ -40,6 +40,9 @@ export function WorkspaceCard({ workspace, onClick, actions, className }: Worksp
           <h3 className="text-md font-semibold truncate">{workspace.name}</h3>
           {workspace.description && (
             <p className="text-sm text-muted-foreground line-clamp-2">{workspace.description}</p>
+          )}
+          {!workspace.description && (
+            <p className="text-sm text-muted-foreground">No description available.</p>
           )}
         </div>
 
@@ -115,13 +118,13 @@ export function WorkspaceEmptyCard({
       className={cn(
         'ring-0 rounded-sm border border-dashed px-2 py-6 max-w-96 min-w-64 w-full space-y-5 transition duration-150',
         'flex flex-col items-center justify-center min-h-36',
-        'text-muted-foreground hover:text-foreground hover:bg-muted/40 hover:border-muted-foreground/40',
+        'bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/40 hover:border-muted-foreground/40',
         onClick && 'cursor-pointer',
         className,
       )}
     >
       <div className="flex flex-col items-center gap-2 select-none">
-        <div className="flex items-center justify-center size-8 rounded-md border border-dashed border-current">
+        <div className="flex items-center justify-center size-8 rounded-md border border-muted-foreground/50">
           <Icon className="size-4" />
         </div>
         <div className="text-center space-y-0.5">

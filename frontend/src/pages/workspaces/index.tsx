@@ -1,38 +1,31 @@
 import PageLayout from "@/layout/page";
 import WorkspaceList from "./components/workspace-list";
+import type { RootState } from "@/store/store";
+import { useAppSelector } from "@/store/app-dispatcher";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Page() {
+  const workspaces = useAppSelector((state: RootState) => state.workspaces.workspaces);
+  const status = useAppSelector((state: RootState) => state.workspaces.status);
+  const error = useAppSelector((state: RootState) => state.workspaces.error);
+
+  const navigate = useNavigate();
+
   return (
     <PageLayout
       title="Workspaces"
       description="Manage your workspaces here."
+      headerActions={
+        <>
+          <Button variant="outline" onClick={() => navigate('/workspaces/create')}>
+            <Plus /> New Workspace
+          </Button>
+        </>
+      }
     >
-      <WorkspaceList workspaces={[
-        {
-          id: "1",
-          name: "Workspace 1",
-          description: "First workspace",
-          createdAt: "2023-01-01T00:00:00Z",
-          updatedAt: "2023-01-01T00:00:00Z",
-          tags: ["tag1", "tag2"]
-        },
-        {
-          id: "2",
-          name: "Workspace 2",
-          description: "Second workspace",
-          createdAt: "2023-01-01T00:00:00Z",
-          updatedAt: "2023-01-01T00:00:00Z",
-          tags: ["tag3", "tag4"]
-        },
-        {
-          id: "3",
-          name: "Workspace 3",
-          description: "Third workspace",
-          createdAt: "2023-01-01T00:00:00Z",
-          updatedAt: "2023-01-01T00:00:00Z",
-          tags: ["tag5", "tag6"]
-        }
-      ]} />
+      <WorkspaceList workspaces={workspaces} loading={status === 'loading'} error={status === 'failed' ? error : undefined} />
     </PageLayout>
   );
 }

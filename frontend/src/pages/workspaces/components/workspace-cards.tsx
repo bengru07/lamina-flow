@@ -35,7 +35,7 @@ export default function WorkspaceCards({ workspaces, onNewWorkspace }: Workspace
         />
       ))}
 
-      {onNewWorkspace && (
+      {(workspaces.length === 0 || onNewWorkspace) && (
         <WorkspaceEmptyCard
           label="New workspace"
           description="Create a new workspace"

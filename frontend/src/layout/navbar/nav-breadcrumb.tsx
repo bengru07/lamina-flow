@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useLocation, useParams, useNavigate } from 'react-router-dom'
-import { ChevronRight, LayoutDashboard, Boxes, FileText, Rocket, Settings } from 'lucide-react'
+import { ChevronRight, LayoutDashboard, Boxes, FileText, Rocket, Settings, Workflow, Box } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,6 +16,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { useAppDispatch } from '@/store/app-dispatcher'
+import { setCurrentWorkspaceById } from '@/store/workspaces/workspace-slice'
+import { useSelector } from 'react-redux'
+import type { RootState } from '@/store/store'
+import { thunkGetAllWorkspaces } from '@/store/workspaces/workspace-thunk'
 
 interface ResolvedCrumb {
   label: React.ReactNode
@@ -34,6 +39,7 @@ function SegmentLabel({ icon, text }: { icon: React.ReactNode; text: string }) {
 
 function WorkspaceLabel({ workspaceId, href }: { workspaceId: string; href: string }) {
   const navigate = useNavigate()
+  const workspace = useSelector((state: RootState) => state.workspaces.currentWorkspace);
 
   return (
     <DropdownMenu>
@@ -45,8 +51,8 @@ function WorkspaceLabel({ workspaceId, href }: { workspaceId: string; href: stri
             'transition-colors duration-150 outline-none',
           )}
         >
-          <Boxes className="size-3.5 opacity-60 shrink-0" />
-          <span className="max-w-40 truncate">{workspaceId}</span>
+          <Box className="size-3.5 opacity-60 shrink-0 -ml-1 mr-0.5" />
+          <span className="max-w-40 truncate">{workspace?.name}</span>
           <ChevronRight className="size-3 opacity-40 rotate-90 shrink-0" />
         </button>
       </DropdownMenuTrigger>
@@ -65,7 +71,21 @@ function WorkspaceLabel({ workspaceId, href }: { workspaceId: string; href: stri
 function useResolvedCrumbs(): ResolvedCrumb[] {
   const location = useLocation()
   const params = useParams()
+  const dispatch = useAppDispatch();
   const segments = location.pathname.split('/').filter(Boolean)
+  const workspaces = useSelector((state: RootState) => state.workspaces.workspaces);
+
+  React.useEffect(() => {
+    dispatch(thunkGetAllWorkspaces())
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    const identifier = params.workspaceId || segments[1]
+
+    if (identifier) {
+      dispatch(setCurrentWorkspaceById(identifier))
+    }
+  }, [dispatch, location.pathname, params, params.workspaceId, segments, workspaces])
 
   if (segments.length === 0) {
     return [
@@ -84,14 +104,23 @@ function useResolvedCrumbs(): ResolvedCrumb[] {
   const [first, second, third] = segments
 
   if (first === 'workspaces') {
-    const onDetail = !!second
+    const isCreate = second === 'create'
+    const onDetail = !!second && !isCreate
     const onSettings = second && third === 'settings'
+    const onWorkflows = second && third === 'workflows'
 
     crumbs.push({
       label: <SegmentLabel icon={<Boxes />} text="Workspaces" />,
       href: '/workspaces',
-      isLast: !onDetail,
+      isLast: !onDetail && !isCreate,
     })
+
+    if (isCreate) {
+      crumbs.push({
+        label: <SegmentLabel icon={<Boxes />} text="New Workspace" />,
+        isLast: true,
+      })
+    }
 
     if (onDetail) {
       crumbs.push({
@@ -101,13 +130,20 @@ function useResolvedCrumbs(): ResolvedCrumb[] {
             href={`/workspaces/${second}`}
           />
         ),
-        href: onSettings ? `/workspaces/${second}` : undefined,
-        isLast: !onSettings,
+        href: onSettings || onWorkflows ? `/workspaces/${second}` : undefined,
+        isLast: !onSettings && !onWorkflows,
       })
 
       if (onSettings) {
         crumbs.push({
           label: <SegmentLabel icon={<Settings />} text="Settings" />,
+          isLast: true,
+        })
+      }
+
+      if (onWorkflows) {
+        crumbs.push({
+          label: <SegmentLabel icon={<Workflow />} text="Workflows" />,
           isLast: true,
         })
       }
